@@ -37,6 +37,7 @@ export const createProductMarket = async (req, res) => {
 
 export const findArticles = async (req, res) => {
   const { name, order, path, market } = req.query;
+  console.log(name)
   let whereCondition = {};
   let whereCondition2 = {};
 
@@ -45,7 +46,7 @@ export const findArticles = async (req, res) => {
   }
 
   if (!path) {
-    whereCondition2.name = { [Op.like]: `%${name}%` };
+    whereCondition2.name = { [Op.iLike]: `%${name}%` };
   }
 
   if (market) {
@@ -55,7 +56,6 @@ export const findArticles = async (req, res) => {
 
   try {
     const result = await find_ProductSupermarket(whereCondition, whereCondition2);
-
     var supermarkets = [];
     result.forEach((element) => {
       const supermarketName = element.Supermarket.name;
@@ -84,11 +84,7 @@ export const findArticles = async (req, res) => {
 };
 
 export const createProductList = async (req, res) => {
-  let { filename } = req.file
-  try {
-    const result = await fs.readFile(`./uploads/${filename}`)
-    const { products } = JSON.parse(result)
-    products.map(async element => {
+
       const { product_name, supermarket_name, price, offer, no_offer, product_img, url, region } = element
       const { SupermarketId } = await findSupermarketByName(supermarket_name);
       const {ProductId} = await createProduct(product_name, product_img);
@@ -99,21 +95,17 @@ export const createProductList = async (req, res) => {
       if (product) {
         try {
           await Actualize_ProductSupermaket(price, offer, no_offer, ProductId, SupermarketId, RegionId)
-          console.log({ "msg": "Update succesfully" });
+          res.json({ "msg": "Update succesfully" });
         } catch (error) {
           console.log(error)
         }
       } else {
         try {
           await Create_ProductSupermarket(price, offer, url, no_offer, ProductId, SupermarketId, RegionId);
-          console.log({ "msg": "Create successfully" });
+          res.json({ "msg": "Create successfully" });
         } catch (error) {
           console.log(error)
         }
       }
-    })
-    res.json("CREATE SUCCESSFULLY")
-  } catch (error) {
-    console.log(error)
-  }
+
 }

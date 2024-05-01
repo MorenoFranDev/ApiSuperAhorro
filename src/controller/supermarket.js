@@ -56,5 +56,7 @@ export const findCartShop = async (req, res) => {
 
   const output = Object.values(groupedBySupermarket);
 
+  console.log(output)
+
   res.json(output);
 };

@@ -67,7 +67,8 @@ export const find_ProductSupermarket = async (whereCondition, whereCondition2) =
   const result = await ProductMarket.findAll({
     where: whereCondition,
     include: [
-      { model: Product, where: whereCondition2 },
+      { model: Product, where: whereCondition2 
+      },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
   })
