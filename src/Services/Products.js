@@ -75,7 +75,8 @@ export const find_ProductSupermarket = async (whereCondition, whereCondition2) =
   return result
 }
 
-export const find_custom_ProductSupermarket = async (ProductId) => {
+export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) => {
+  console.log(ProductId)
   const result = await ProductMarket.findAll({
     include: [
       { model: Supermarket, attributes: ["name", "id"] },

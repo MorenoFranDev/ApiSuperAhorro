@@ -89,7 +89,6 @@ export const createProductList = async (req, res) => {
       const { SupermarketId } = await findSupermarketByName(supermarket_name);
       const {ProductId} = await createProduct(product_name, product_img);
       const { RegionId } = await findRegionByName(region);
-
       const product = await find_ProdMarket_ByName(ProductId, SupermarketId);
 
       if (product) {
