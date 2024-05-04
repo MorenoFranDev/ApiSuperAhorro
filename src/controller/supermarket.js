@@ -1,7 +1,10 @@
 import { find_custom_ProductSupermarket } from "../Services/Products.js";
 import {
   CreateSupermarket,
+  removeSupermarketService,
   findSupermarketByName,
+  updateSupermarketService,
+  getSupermarketService,
 } from "../Services/Supermerket.js";
 import { Supermarket } from "../models/Supermarket.model.js";
 
@@ -17,6 +20,27 @@ export const createSupermarket = async (req, res) => {
   const response = await CreateSupermarket(logo, name);
   res.json(response);
 };
+
+
+export const removeSupermarket = async (req, res)=>{
+  const {id} = req.params
+  const result = await removeSupermarketService(id)
+  return result
+}
+
+
+export const updateSupermarket = async (req, res)=>{
+  const {id} = req.params
+  const {name} = req.body
+  const resp = await updateSupermarketService(name, id)
+  return  res.json(resp)
+}
+
+
+export const getSupermarket = async (req, res)=>{
+  const resp = await getSupermarketService()
+  return res.json(resp)
+}
 
 export const findSupermarket = async (req, res) => {
   const { name } = req.params;

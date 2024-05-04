@@ -2,13 +2,14 @@ import { Product } from "../models/Product.model.js";
 import { ProductMarket } from "../models/ProductMarket.module.js";
 import { Supermarket } from "../models/Supermarket.model.js";
 
-export const createProduct = async (product_name, img) => {
+export const createProduct = async (product_name, img,CategoryId) => {
   const find = await findProductByName(product_name);
   if (find !== null) return  {ProductId: find.ProductId} ;
   try {
     const insert = new Product({
       name: product_name,
       img,
+      CategoryId
     });
     const result = await insert.save();
     return {
@@ -63,14 +64,14 @@ export const Actualize_ProductSupermaket = async (price, offer, no_offer, Produc
   );
 };
 
-export const find_ProductSupermarket = async (whereCondition, whereCondition2) => {
+export const find_ProductSupermarket = async (whereSupermarket, whereName, whereCategory,page) => {
   const result = await ProductMarket.findAll({
-    where: whereCondition,
+    where: whereSupermarket,
     include: [
-      { model: Product, where: whereCondition2 
-      },
+      { model: Product, where: whereName , where: whereCategory },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
+    offset: (page-1)*20, limit: page*20
   })
   return result
 }

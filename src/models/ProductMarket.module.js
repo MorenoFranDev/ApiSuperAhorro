@@ -22,6 +22,8 @@ export const ProductMarket = sequelize.define("ProductMarket", {
   url: {
     type: DataTypes.STRING,
   }
+},{
+  timestamps: true
 });
 
 

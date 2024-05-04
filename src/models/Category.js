@@ -9,4 +9,6 @@ export const Category = sequelize.define("Category", {
     primaryKey: true,
   },
   name: DataTypes.STRING,
+},{
+  timestamps: true
 });

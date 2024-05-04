@@ -3,6 +3,7 @@ import sequelize from "../connection.js";
 import { ProductMarket } from "./ProductMarket.module.js";
 import { Product } from "./Product.model.js";
 import { Region } from "./Region.js";
+import { Category } from "./Category.js";
 sequelize.sync()
 
 export const Supermarket = sequelize.define("Supermarket", {
@@ -19,6 +20,8 @@ export const Supermarket = sequelize.define("Supermarket", {
   logo: {
     type: DataTypes.STRING,
   },
+},{
+  timestamps: true
 });
 
 Supermarket.hasMany(ProductMarket)
@@ -27,3 +30,4 @@ Region.hasMany(ProductMarket)
 
 ProductMarket.belongsTo(Supermarket)
 ProductMarket.belongsTo(Product)
+Product.belongsTo(Category)

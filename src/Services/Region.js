@@ -10,9 +10,17 @@ export const createRegionService = async (name) => {
 };
 
 export const findRegionByName = async (name) => {
-  const result = await Region.findOne({
-    where: { name }
-  });
-  if(result) return { name: result.name, RegionId: result.id };
+  const result = await Region.findOne({ where: { name } });
+  if (result) return { "RegionId": result.id, "name": result.name };
   return null
 };
+
+export const removeRegionService = async (id) => {
+  const result = await Region.remove({ where: { id } })
+  return result
+}
+
+export const updateRegionService = async (name, id) => {
+  const result = await Region.update({ name }, { where: { id } })
+  return result
+}

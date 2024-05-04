@@ -13,6 +13,16 @@ export const CreateSupermarket = async (logo, name) => {
   }
 };
 
+export const updateSupermarketService = async(name, id)=>{
+  const result = await Supermarket.update({name},{where: {id}})
+  return result
+}
+
+export const getSupermarketService = async ()=>{
+  const result = await Supermarket.findAll({ attributes: ["name", "id"] })
+  return (result) 
+}
+
 export const findSupermarketByName = async (name) => {
   const result = await Supermarket.findOne({
     where: { name },
@@ -20,3 +30,8 @@ export const findSupermarketByName = async (name) => {
   if (result) return  {SupermarketId: result.id, name:result.name, logo:result.logo} ;
   return null;
 };
+
+export const removeSupermarketService = async (req, res)=>{
+  const result = await Supermarket.destroy({where:{id}})
+  return res.json(result)
+}

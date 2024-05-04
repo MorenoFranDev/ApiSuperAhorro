@@ -1,7 +1,7 @@
+import { getFind } from "../Services/Category.js";
 import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
 import { findSupermarketByName } from "../Services/Supermerket.js";
-import fs from 'fs/promises'
 import { Op } from "sequelize"
 
 
@@ -9,7 +9,7 @@ export const createProductMarket = async (req, res) => {
   const { product_name, supermarket_name, price, offer, no_offer, product_img, url, region } = req.body;
 
   const { SupermarketId } = await findSupermarketByName(supermarket_name);
-  const ProductId = await createProduct(product_name, product_img);
+  const { ProductId } = await createProduct(product_name, product_img);
   const { RegionId } = await findRegionByName(region);
 
 
@@ -36,26 +36,25 @@ export const createProductMarket = async (req, res) => {
 };
 
 export const findArticles = async (req, res) => {
-  const { name, order, path, market } = req.query;
-  console.log(name)
-  let whereCondition = {};
-  let whereCondition2 = {};
+  const { name, order, market, category } = req.query;
+  const page = (req.query.page===undefined) ? 1 : req.query.page
+  let whereSupermarket = {};
+  let whereName = {};
+  let whereCategory = {}
 
   if (name) {
-    whereCondition2.name = name;
+    whereName.name = { [Op.iLike]: `%${name}%` };
   }
-
-  if (!path) {
-    whereCondition2.name = { [Op.iLike]: `%${name}%` };
+  if (category) {
+    const {CategoryId} = await getFind(category)
+    whereCategory.CategoryId = (CategoryId)
   }
-
   if (market) {
     const SupermarketId = await findMarket_id(market);
-    whereCondition.SupermarketId = SupermarketId;
+    whereSupermarket.SupermarketId = SupermarketId;
   }
-
   try {
-    const result = await find_ProductSupermarket(whereCondition, whereCondition2);
+    const result = await find_ProductSupermarket(whereSupermarket, whereName, whereCategory, page);
     var supermarkets = [];
     result.forEach((element) => {
       const supermarketName = element.Supermarket.name;
@@ -84,27 +83,27 @@ export const findArticles = async (req, res) => {
 };
 
 export const createProductList = async (req, res) => {
-
-      const { product_name, supermarket_name, price, offer, no_offer, product_img, url, region } = req.body
-      const { SupermarketId } = await findSupermarketByName(supermarket_name);
-      const {ProductId} = await createProduct(product_name, product_img);
-      const { RegionId } = await findRegionByName(region);
-      const product = await find_ProdMarket_ByName(ProductId, SupermarketId);
-
-      if (product) {
-        try {
-          await Actualize_ProductSupermaket(price, offer, no_offer, ProductId, SupermarketId, RegionId)
-          res.json({ "msg": "Update succesfully" });
-        } catch (error) {
-          console.log(error)
-        }
-      } else {
-        try {
-          await Create_ProductSupermarket(price, offer, url, no_offer, ProductId, SupermarketId, RegionId);
-          res.json({ "msg": "Create successfully" });
-        } catch (error) {
-          console.log(error)
-        }
-      }
-
+  const { product_name, supermarket_name, price, offer, no_offer, product_img, url, region, Categoria } = req.body
+  const { CategoryId } = await getFind(Categoria)
+  const { SupermarketId } = await findSupermarketByName(supermarket_name);
+  const { ProductId } = await createProduct(product_name, product_img, CategoryId);
+  const { RegionId } = await findRegionByName(region);
+  const product = await find_ProdMarket_ByName(ProductId, SupermarketId);
+  if (product) {
+    try {
+      await Actualize_ProductSupermaket(price, offer, no_offer, ProductId, SupermarketId, RegionId)
+      res.json({ "msg": "Update succesfully" });
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    try {
+      await Create_ProductSupermarket(price, offer, url, no_offer, ProductId, SupermarketId, RegionId);
+      res.json({ "msg": "Create successfully" });
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
+
+

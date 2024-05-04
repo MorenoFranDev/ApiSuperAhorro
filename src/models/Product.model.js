@@ -11,5 +11,7 @@ export const Product = sequelize.define("Product", {
   },
   name: DataTypes.STRING,
   img: DataTypes.STRING,
+},{
+  timestamps: true
 });
 
