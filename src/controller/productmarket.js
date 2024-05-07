@@ -1,8 +1,7 @@
 import { getFind } from "../Services/Category.js";
-import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket } from "../Services/Products.js";
+import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
 import { findSupermarketByName } from "../Services/Supermerket.js";
-import { Op } from "sequelize"
 
 
 export const createProductMarket = async (req, res) => {
@@ -37,24 +36,28 @@ export const createProductMarket = async (req, res) => {
 
 export const findArticles = async (req, res) => {
   const { name, order, market, category } = req.query;
-  const page = (req.query.page===undefined) ? 1 : req.query.page
+  const page = (req.query.page === undefined) ? 1 : req.query.page
+  var result;
   let whereSupermarket = {};
-  let whereName = {};
-  let whereCategory = {}
 
   if (name) {
-    whereName.name = { [Op.iLike]: `%${name}%` };
+    const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page);
+    result = resultQuery;
   }
+
+
   if (category) {
     const {CategoryId} = await getFind(category)
-    whereCategory.CategoryId = (CategoryId)
+    const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page);
+    result = resultQuery;
+
   }
+
   if (market) {
     const SupermarketId = await findMarket_id(market);
     whereSupermarket.SupermarketId = SupermarketId;
   }
   try {
-    const result = await find_ProductSupermarket(whereSupermarket, whereName, whereCategory, page);
     var supermarkets = [];
     result.forEach((element) => {
       const supermarketName = element.Supermarket.name;

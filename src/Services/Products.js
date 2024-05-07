@@ -1,10 +1,11 @@
+import { Op } from "sequelize";
 import { Product } from "../models/Product.model.js";
 import { ProductMarket } from "../models/ProductMarket.module.js";
 import { Supermarket } from "../models/Supermarket.model.js";
 
-export const createProduct = async (product_name, img,CategoryId) => {
+export const createProduct = async (product_name, img, CategoryId) => {
   const find = await findProductByName(product_name);
-  if (find !== null) return  {ProductId: find.ProductId} ;
+  if (find !== null) return { ProductId: find.ProductId };
   try {
     const insert = new Product({
       name: product_name,
@@ -64,17 +65,40 @@ export const Actualize_ProductSupermaket = async (price, offer, no_offer, Produc
   );
 };
 
-export const find_ProductSupermarket = async (whereSupermarket, whereName, whereCategory,page) => {
+
+// , where: whereCategory
+export const find_ProductSupermarket_name = async (whereSupermarket, name, page) => {
   const result = await ProductMarket.findAll({
     where: whereSupermarket,
     include: [
-      { model: Product, where: whereName , where: whereCategory },
+      {
+        model: Product,
+        where: { name: { [Op.iLike]: `${name}%` } }, 
+      },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
-    offset: (page-1)*20, limit: page*20
-  })
-  return result
-}
+    offset: (page - 1) * 20,
+    limit: 20, 
+  });
+  return result;
+};
+
+export const find_ProductSupermarket_category = async (whereSupermarket, whereCategory, page) => {
+  console.log(whereCategory)
+  const result = await ProductMarket.findAll({
+    where: whereSupermarket,
+    include: [
+      {
+        model: Product,
+        where: { CategoryId: { whereCategory } }, 
+      },
+      { model: Supermarket, attributes: ["name", "logo"] },
+    ],
+    offset: (page - 1) * 20,
+    limit: 20, 
+  });
+  return result;
+};
 
 export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) => {
   console.log(ProductId)

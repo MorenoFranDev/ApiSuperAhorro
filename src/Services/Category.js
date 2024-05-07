@@ -10,8 +10,12 @@ export const createCategoryService = async (name) => {
 }
 
 export const getFind = async (name) => {
-  const result = await Category.findOne({ where: { name }, attributes: ["name", "id"] })
-  return { "CategoryId": result.id, "name": result.name }
+  try {
+    const result = await Category.findOne({ where: { name }, attributes: ["name", "id"] })
+    return { "CategoryId": result.id, "name": result.name }
+  } catch (error) {
+    
+  }
 }
 
 export const getCategoryService = async () => {
