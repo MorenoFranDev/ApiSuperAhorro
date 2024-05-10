@@ -66,9 +66,8 @@ export const Actualize_ProductSupermaket = async (price, offer, no_offer, Produc
 };
 
 
-// , where: whereCategory
 export const find_ProductSupermarket_name = async (whereSupermarket, name, page,order) => {
-  const result = await ProductMarket.findAll({
+  const queryOptions = {
     where: whereSupermarket,
     include: [
       {
@@ -78,28 +77,32 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
     offset: (page - 1) * 20,
-    limit: 20, 
-    order: [[{ model: Product }, 'price', order]] 
-  });
+    limit: 20
+  };
+  if (order) {
+    queryOptions.order = [['price', order]];
+  }
+  const result = await ProductMarket.findAll(queryOptions);
   return result;
 };
 
 export const find_ProductSupermarket_category = async (whereSupermarket, whereCategory, page,order) => {
-  const result = await ProductMarket.findAll({
+  const queryOptions = {
     where: whereSupermarket,
     include: [
       {
         model: Product,
-        where: { CategoryId:  whereCategory  }, 
+        where: { CategoryId: whereCategory }, 
       },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
     offset: (page - 1) * 20,
-    limit: 20, 
-    order: [[{ model: Product }, 'price', order]] // Orden descendente por precio
-
-  });
-
+    limit: 20
+  };
+  if (order) {
+    queryOptions.order = [['price', order]];
+  }
+  const result = await ProductMarket.findAll(queryOptions);
   return result;
 };
 
