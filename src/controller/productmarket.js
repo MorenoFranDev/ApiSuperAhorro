@@ -41,14 +41,14 @@ export const findArticles = async (req, res) => {
   let whereSupermarket = {};
 
   if (name) {
-    const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page);
+    const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page,order);
     result = resultQuery;
   }
 
 
   if (category) {
     const {CategoryId} = await getFind(category)
-    const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page);
+    const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page,order);
     result = resultQuery;
 
   }

@@ -35,5 +35,4 @@ export const updateCategoryService = async (id, name) => {
   } catch (error) {
     throw new error
   }
-
 }
