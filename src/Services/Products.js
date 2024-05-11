@@ -72,7 +72,7 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
     include: [
       {
         model: Product,
-        where: { name: { [Op.iLike]: `${name}%` } }, 
+        where: { name: { [Op.iLike]: `%${name}%` } }, 
       },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
