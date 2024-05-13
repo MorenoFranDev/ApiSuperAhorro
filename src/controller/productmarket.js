@@ -1,7 +1,7 @@
 import { getFind } from "../Services/Category.js";
 import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
-import { findSupermarketByName } from "../Services/Supermerket.js";
+import { findSupermarketByName, getSupermarketService } from "../Services/Supermerket.js";
 
 
 export const createProductMarket = async (req, res) => {
@@ -44,8 +44,7 @@ export const findArticles = async (req, res) => {
     const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page,order);
     result = resultQuery;
   }
-
-
+  
   if (category) {
     const {CategoryId} = await getFind(category)
     const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page,order);
@@ -54,7 +53,7 @@ export const findArticles = async (req, res) => {
   }
 
   if (market) {
-    const SupermarketId = await findMarket_id(market);
+    const {SupermarketId} = await getSupermarketService(market);
     whereSupermarket.SupermarketId = SupermarketId;
   }
   try {
