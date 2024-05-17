@@ -77,7 +77,7 @@ export const findArticles = async (req, res) => {
       }
     });
 
-    return res.json({ Pruducts: result, Supermarkets: supermarkets });
+    return res.json({ Products: result, Supermarkets: supermarkets });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
