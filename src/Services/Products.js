@@ -76,13 +76,13 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
       },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
-    offset: (page - 1) * 40,
-    limit: 40
+    offset: (page - 1) * 20,
+    limit: 20
   };
   if (order) {
     queryOptions.order = [['price', order]];
   }
-  const result = await ProductMarket.findAll(queryOptions);
+  const result = await ProductMarket.findAndCountAll(queryOptions);
   return result;
 };
 
@@ -96,8 +96,8 @@ export const find_ProductSupermarket_category = async (whereSupermarket, whereCa
       },
       { model: Supermarket, attributes: ["name", "logo"] },
     ],
-    offset: (page - 1) * 40,
-    limit: 40
+    offset: (page - 1) * 20,
+    limit: 20
   };
   if (order) {
     queryOptions.order = [['price', order]];

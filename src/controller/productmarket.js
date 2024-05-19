@@ -37,8 +37,15 @@ export const createProductMarket = async (req, res) => {
 export const findArticles = async (req, res) => {
   const { name, order, market, category } = req.query;
   const page = (req.query.page === undefined) ? 1 : req.query.page
+
+  console.log("\n\n\n\n\n\nPAGE: ",page,"\n\n\n\n\n\n")
   var result;
+
   let whereSupermarket = {};
+  if (market) {
+    const {SupermarketId} = await getSupermarketService(market);
+    whereSupermarket.SupermarketId = SupermarketId;
+  }
 
   if (name) {
     const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page,order);
@@ -52,13 +59,9 @@ export const findArticles = async (req, res) => {
 
   }
 
-  if (market) {
-    const {SupermarketId} = await getSupermarketService(market);
-    whereSupermarket.SupermarketId = SupermarketId;
-  }
   try {
     var supermarkets = [];
-    result.forEach((element) => {
+    result.rows.forEach((element) => {
       const supermarketName = element.Supermarket.name;
       const supermarketId = element.Supermarket.id;
       const supermarketLogo = element.Supermarket.logo;
@@ -76,8 +79,7 @@ export const findArticles = async (req, res) => {
         });
       }
     });
-
-    return res.json({ Products: result, Supermarkets: supermarkets });
+    return res.json({ Products: result.rows, Supermarkets: supermarkets, Pages: Math.ceil(result.count/20) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
