@@ -7,4 +7,5 @@ router.post("/add", createSupermarket )
 router.put("/edit/:id", updateSupermarket )
 router.get("/", getSupermarket )
 router.get("/region",supermarketRegion)
+
 export default router

@@ -39,8 +39,8 @@ export const removeSupermarket = async (req, res) => {
 
 export const updateSupermarket = async (req, res) => {
   const { id } = req.params
-  const { name } = req.body
-  const resp = await updateSupermarketService(name, id)
+  const { name, logo } = req.body
+  const resp = await updateSupermarketService(name, id, logo)
   return res.json(resp)
 }
 
