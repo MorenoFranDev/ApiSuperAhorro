@@ -8,6 +8,14 @@ import {
 } from "../Services/Supermerket.js";
 import { Supermarket } from "../models/Supermarket.model.js";
 
+
+export const supermarketRegion = async (req, res) => {
+  // const { id } = req.params
+  const resp = await Supermarket.findAll()
+  res.json(resp)
+  console.log(resp)
+}
+
 export const createSupermarket = async (req, res) => {
   const { logo, name } = req.body;
   if (name === undefined)
@@ -22,22 +30,22 @@ export const createSupermarket = async (req, res) => {
 };
 
 
-export const removeSupermarket = async (req, res)=>{
-  const {id} = req.params
+export const removeSupermarket = async (req, res) => {
+  const { id } = req.params
   const result = await removeSupermarketService(id)
   return result
 }
 
 
-export const updateSupermarket = async (req, res)=>{
-  const {id} = req.params
-  const {name} = req.body
+export const updateSupermarket = async (req, res) => {
+  const { id } = req.params
+  const { name } = req.body
   const resp = await updateSupermarketService(name, id)
-  return  res.json(resp)
+  return res.json(resp)
 }
 
 
-export const getSupermarket = async (req, res)=>{
+export const getSupermarket = async (req, res) => {
   const resp = await getSupermarketService()
   return res.json(resp)
 }
@@ -55,11 +63,14 @@ export const findSupermarket = async (req, res) => {
 
 export const findCartShop = async (req, res) => {
   const { ProductId } = req.body;
-  const result = await find_custom_ProductSupermarket(ProductId);
+  const arrayProductsId = ProductId.map((element) => element.id)
+  console.log(ProductId)
+  const result = await find_custom_ProductSupermarket(arrayProductsId);
   const groupedBySupermarket = {};
   result.forEach((entry) => {
     const supermarketName = entry.Supermarket.name;
     const productInfo = {
+      quantity: ProductId.find(item => entry.Product.id == item.id)?.quantity,
       id: entry.id,
       price: entry.price,
       offer: entry.offer,
@@ -67,6 +78,8 @@ export const findCartShop = async (req, res) => {
       url: entry.url,
       Product: entry.Product,
     };
+
+    console.log(productInfo)
 
     if (!groupedBySupermarket[supermarketName]) {
       groupedBySupermarket[supermarketName] = {

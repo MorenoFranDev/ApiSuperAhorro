@@ -6,4 +6,5 @@ router.post("/add",createRegion)
 router.delete("/remove/:id", removeRegion)
 router.put("/edit/:id", updateRegion)
 router.get("/",getRegions)
+
 export default router;

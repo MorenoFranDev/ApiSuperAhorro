@@ -38,48 +38,28 @@ export const findArticles = async (req, res) => {
   const { name, order, market, category } = req.query;
   const page = (req.query.page === undefined) ? 1 : req.query.page
 
-  console.log("\n\n\n\n\n\nPAGE: ",page,"\n\n\n\n\n\n")
   var result;
 
   let whereSupermarket = {};
   if (market) {
-    const {SupermarketId} = await getSupermarketService(market);
+    const { SupermarketId } = await getSupermarketService(market);
     whereSupermarket.SupermarketId = SupermarketId;
   }
 
   if (name) {
-    const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page,order);
+    const resultQuery = await find_ProductSupermarket_name(whereSupermarket, name, page, order);
     result = resultQuery;
   }
-  
+
   if (category) {
-    const {CategoryId} = await getFind(category)
-    const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page,order);
+    const { CategoryId } = await getFind(category)
+    const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page, order);
     result = resultQuery;
 
   }
 
   try {
-    var supermarkets = [];
-    result.rows.forEach((element) => {
-      const supermarketName = element.Supermarket.name;
-      const supermarketId = element.Supermarket.id;
-      const supermarketLogo = element.Supermarket.logo;
-      if (
-        !supermarkets.some(
-          (supermarket) =>
-            supermarket.name === supermarketName &&
-            supermarket.id === supermarketId
-        )
-      ) {
-        supermarkets.push({
-          name: supermarketName,
-          id: supermarketId,
-          logo: supermarketLogo,
-        });
-      }
-    });
-    return res.json({ Products: result.rows, Supermarkets: supermarkets, Pages: Math.ceil(result.count/20) });
+    return res.json({ Products: result.rows, Pages: Math.ceil(result.count / 20) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

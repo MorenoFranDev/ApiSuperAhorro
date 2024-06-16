@@ -30,7 +30,6 @@ export const deletCategoryService = async (id) => {
 export const updateCategoryService = async (id, name) => {
   try {
     const result = await Category.update({ name }, { where: { id } })
-    console.log(result)
     return result
   } catch (error) {
     throw new error
