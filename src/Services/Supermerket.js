@@ -13,7 +13,7 @@ export const CreateSupermarket = async (logo, name) => {
   }
 };
 
-export const updateSupermarketService = async (name, id) => {
+export const updateSupermarketService = async (name, id,logo) => {
   const result = await Supermarket.update({ name, logo }, { where: { id } })
   return result
 }
