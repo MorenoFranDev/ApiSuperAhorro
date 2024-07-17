@@ -37,13 +37,13 @@ export const createProductMarket = async (req, res) => {
 export const findArticles = async (req, res) => {
   const { name, order, market, category } = req.query;
   const page = (req.query.page === undefined) ? 1 : req.query.page
-
+  
   var result;
-
-  let whereSupermarket = {};
+  
+  let whereSupermarket
   if (market) {
-    const { SupermarketId } = await getSupermarketService(market);
-    whereSupermarket.SupermarketId = SupermarketId;
+    const {SupermarketId} = await findSupermarketByName(market);
+    whereSupermarket = SupermarketId
   }
 
   if (name) {
@@ -55,7 +55,6 @@ export const findArticles = async (req, res) => {
     const { CategoryId } = await getFind(category)
     const resultQuery = await find_ProductSupermarket_category(whereSupermarket, CategoryId, page, order);
     result = resultQuery;
-
   }
 
   try {

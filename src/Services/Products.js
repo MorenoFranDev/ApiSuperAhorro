@@ -68,7 +68,6 @@ export const Actualize_ProductSupermaket = async (price, offer, no_offer, Produc
 
 export const find_ProductSupermarket_name = async (whereSupermarket, name, page,order) => {
   const queryOptions = {
-    where: whereSupermarket,
     include: [
       {
         model: Product,
@@ -81,6 +80,9 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
   };
   if (order) {
     queryOptions.order = [['price', order]];
+  }
+  if(whereSupermarket){
+    queryOptions.where = {SupermarketId: whereSupermarket}
   }
   const result = await ProductMarket.findAndCountAll(queryOptions);
   return result;
@@ -107,7 +109,6 @@ export const find_ProductSupermarket_category = async (whereSupermarket, whereCa
 };
 
 export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) => {
-  console.log(ProductId)
   const result = await ProductMarket.findAll({
     include: [
       { model: Supermarket, attributes: ["name", "id"] },
