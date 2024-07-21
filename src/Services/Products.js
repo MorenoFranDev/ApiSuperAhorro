@@ -81,10 +81,10 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
   if (order) {
     queryOptions.order = [['price', order]];
   }
-  console.log(`\n\n\n\n\n${whereSupermarket}\n\n\n\n\n`)
   if(whereSupermarket){
     queryOptions.where = {SupermarketId: whereSupermarket}
   }
+  console.log(queryOptions)
   const result = await ProductMarket.findAndCountAll(queryOptions);
   return result;
 };
