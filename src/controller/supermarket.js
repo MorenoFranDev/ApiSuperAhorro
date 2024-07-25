@@ -6,11 +6,11 @@ import {
   updateSupermarketService,
   getSupermarketService,
 } from "../Services/Supermerket.js";
-import { Supermarket } from "../models/Supermarket.model.js";
+import { Supermarket } from "../models/Supermarket.js";
 
 
 export const supermarketRegion = async (req, res) => {
-  // const { id } = req.params
+  const { id } = req.params
   const resp = await Supermarket.findAll()
   res.json(resp)
   console.log(resp)

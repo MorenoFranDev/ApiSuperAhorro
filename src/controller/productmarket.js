@@ -1,7 +1,7 @@
 import { getFind } from "../Services/Category.js";
-import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name } from "../Services/Products.js";
+import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name, service_create_cartshop } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
-import { findSupermarketByName, getSupermarketService } from "../Services/Supermerket.js";
+import { findSupermarketByName } from "../Services/Supermerket.js";
 
 
 export const createProductMarket = async (req, res) => {
@@ -90,3 +90,13 @@ export const createProductList = async (req, res) => {
 }
 
 
+export const create_cartshop = async(req, res)=>{
+  const id = req.header.Authorization
+  const list = req.body.ElementsCart
+  try {
+    const cart = await service_create_cartshop(list, id)
+    res.json(cart)
+  } catch (error) {
+    res.json("Error en credenciales o base de datos")
+  }
+} 

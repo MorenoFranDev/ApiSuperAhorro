@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connection.js";
-import { ProductMarket } from "./ProductMarket.module.js";
-import { Product } from "./Product.model.js";
+import { ProductMarket } from "./ProductMarket.js";
+import { Product } from "./Product.js";
 import { Region } from "./Region.js";
 import { Category } from "./Category.js";
 sequelize.sync()

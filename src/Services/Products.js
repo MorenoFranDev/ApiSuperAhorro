@@ -1,7 +1,9 @@
 import { Op } from "sequelize";
-import { Product } from "../models/Product.model.js";
-import { ProductMarket } from "../models/ProductMarket.module.js";
-import { Supermarket } from "../models/Supermarket.model.js";
+import { Product } from "../models/Product.js";
+import { ProductMarket } from "../models/ProductMarket.js";
+import { Supermarket } from "../models/Supermarket.js";
+import { User } from "../models/Users.js";
+import { CartShop } from "../models/CartShop.js";
 
 export const createProduct = async (product_name, img, CategoryId) => {
   const find = await findProductByName(product_name);
@@ -91,7 +93,6 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
 
 export const find_ProductSupermarket_category = async (whereSupermarket, whereCategory, page,order) => {
   const queryOptions = {
-    where: whereSupermarket,
     include: [
       {
         model: Product,
@@ -102,6 +103,9 @@ export const find_ProductSupermarket_category = async (whereSupermarket, whereCa
     offset: (page - 1) * 20,
     limit: 20
   };
+  if(whereSupermarket){
+    queryOptions.where = {SupermarketId: whereSupermarket}
+  }
   if (order) {
     queryOptions.order = [['price', order]];
   }
@@ -120,4 +124,15 @@ export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) =
   });
   return result
 
+}
+
+
+export const service_create_cartshop = async (list, id)=>{
+  const id_user = await User.findOne({where: { id }})
+  const newlist = {
+    UserId: id_user,
+    ElementsCart: list
+  }
+  const cart = new CartShop(newlist) 
+  return await cart.save()
 }
