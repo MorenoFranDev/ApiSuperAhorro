@@ -11,7 +11,7 @@ import passport from "passport";
 import("./models/Users.js")
 const app = express();
 
-app.use(cors({origin: "http://localhost:5173"}));
+app.use(cors({origin: "https://frontend-inky-rho.vercel.app"}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize())
