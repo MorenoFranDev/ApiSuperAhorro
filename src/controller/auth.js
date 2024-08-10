@@ -54,7 +54,7 @@ export const createUser = async (req, res) => {
             { email: email, range: 2, fullName: fullName },
             SecretJWT
         );
-        console.log({ token: token });
+        console.log( "\n\n\n\ntoken: ", token );
         res.json({ token: token });
     } catch (error) {
         res.status(500).json({ msg: "error in data" });
