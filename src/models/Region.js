@@ -9,6 +9,6 @@ export const Region = sequelize.define("Region", {
     primaryKey: true,
   },
   name: DataTypes.STRING,
-},{
+}, {
   timestamps: true
 });

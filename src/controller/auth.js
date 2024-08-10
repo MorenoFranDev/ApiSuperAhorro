@@ -1,35 +1,71 @@
-import jwt from "jsonwebtoken"
-import { SecretJWT } from "../config.js"
+import jwt from "jsonwebtoken";
+import { SecretJWT } from "../config.js";
 import { User } from "../models/Users.js";
+import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 export const loginGoogle = (req, res) => {
     const token = jwt.sign({ user: req.user }, SecretJWT);
-    console.log(req.user)
-    res.redirect(`http://localhost:5173/login/success?token=${token}`)
-}
+    res.redirect(`${SecretCORS}/login/success?token=${token}`);
+};
 
-export const getCredentials = async(req, res)=>{
-    const AuthorizationToken = req.headers["authorization"]
-
-    res.json(jwt.verify(AuthorizationToken,SecretJWT))
-    }
 
 export const local_login = async (req, res) => {
-    const { email, password } = req.body
-    const userWithEmail = await User.findOne({ where: { email } }).catch(
-        (err) => {
-            console.log("Error: ", err);
-        }
-    );
-    await CartShop.findAll()
-    if (!userWithEmail)
-        res.state(500).send("Error in user or email")
+    try {
+        const { email, password } = req.body;
+        const userWithEmail = await User.findOne({
+            where: { email },
+        });
+        if (!userWithEmail) return res.status(500).json("error in credentials");
+        const verify = await verifyPassword(password, userWithEmail.password);
+        if (!verify) return res.status(500).json("error in credentials")
 
-    const verify = await verifyPassword(password, WithEmail.password)
-    if (verify)
-        res.state(500).send("Error in user or email")
+        const token = jwt.sign(
+            {
+                "fullName": userWithEmail.fullName,
+                "range": userWithEmail.range,
+                "email": userWithEmail.email,
+                "Profle": userWithEmail.profile,
+                "UserId": userWithEmail.id,
+            },
+            SecretJWT
+        );
+        return res.json({"token":token})
+    } catch (error) {
+        return res.json("Error in credentials")
+    }
+};
+export const createUser = async (req, res) => {
+    try {
+        const { email, password, fullName, googleId } = req.body;
+        const user = {
+            password: await encryptPass(password),
+            range: 2,
+            googleId: googleId ?? new Date().getTime(),
+            fullName: fullName,
+            email,
+            profile: null,
+        };
+        const resp = await User.findOne({ where: { email } });
+        if (resp) return res.json({ msg: "Datos incorrectos o usuario existente" });
+        const createUser = new User(user);
+        await createUser.save();
+        const token = jwt.sign(
+            { email: email, range: 2, fullName: fullName },
+            SecretJWT
+        );
+        res.json({ token: token });
+    } catch (error) {
+        res.status(500).json({ msg: "error in data" });
+    }
+};
 
-    const token = jwt.sign({ "fullName": WithEmail.fullName, "Emails": WithEmail.email, "Profle": WithEmail.profile }, SecretJWT);
-    const data_user = { "fullName": WithEmail.fullName, "Emails": WithEmail.email, "Profle": WithEmail.profile }
-    res.json({ "token": token, "user": data_user })
-}
+export const GetData = (req, res) => {
+    try {
+        const Authorization = req.headers["authorization"].split(" ")[1];
+        const token = jwt.verify(Authorization, SecretJWT);
+        console.log(token)
+        res.json({ user: token });
+    } catch (error) {
+        res.json({ msg: "error in token" });
+    }
+};

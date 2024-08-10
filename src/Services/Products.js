@@ -86,7 +86,6 @@ export const find_ProductSupermarket_name = async (whereSupermarket, name, page,
   if(whereSupermarket){
     queryOptions.where = {SupermarketId: whereSupermarket}
   }
-  console.log(queryOptions)
   const result = await ProductMarket.findAndCountAll(queryOptions);
   return result;
 };
@@ -116,7 +115,7 @@ export const find_ProductSupermarket_category = async (whereSupermarket, whereCa
 export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) => {
   const result = await ProductMarket.findAll({
     include: [
-      { model: Supermarket, attributes: ["name", "id"] },
+      { model: Supermarket, attributes: ["name", "id","page","logo"] },
       { model: Product, attributes: ["name", "id"] },
     ],
     where: { ProductId },
@@ -127,11 +126,10 @@ export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) =
 }
 
 
-export const service_create_cartshop = async (list, id)=>{
-  const id_user = await User.findOne({where: { id }})
+export const service_create_cartshop = async (list, UserId)=>{
   const newlist = {
-    UserId: id_user,
-    ElementsCart: list
+    UserId,
+    ElementsCart: list.join(", ")
   }
   const cart = new CartShop(newlist) 
   return await cart.save()

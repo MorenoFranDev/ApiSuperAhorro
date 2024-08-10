@@ -18,13 +18,7 @@ export const supermarketRegion = async (req, res) => {
 
 export const createSupermarket = async (req, res) => {
   const { logo, name } = req.body;
-  if (name === undefined)
-    return res.status(400).send("Error: El campo 'name' es obligatorio");
-  const result = await findSupermarketByName(name);
-  if (result)
-    return res
-      .status(400)
-      .send("Error: Supermarket ya existe en Base de datos");
+  if (name === undefined) return res.status(400).send("Error: El campo 'name' es obligatorio");
   const response = await CreateSupermarket(logo, name);
   res.json(response);
 };
@@ -39,8 +33,8 @@ export const removeSupermarket = async (req, res) => {
 
 export const updateSupermarket = async (req, res) => {
   const { id } = req.params
-  const { name, logo } = req.body
-  const resp = await updateSupermarketService(name, id, logo)
+  const { name, logo, page } = req.body
+  const resp = await updateSupermarketService(name, id, logo,page)
   return res.json(resp)
 }
 
@@ -64,11 +58,12 @@ export const findSupermarket = async (req, res) => {
 export const findCartShop = async (req, res) => {
   const { ProductId } = req.body;
   const arrayProductsId = ProductId.map((element) => element.id)
-  console.log(ProductId)
   const result = await find_custom_ProductSupermarket(arrayProductsId);
   const groupedBySupermarket = {};
   result.forEach((entry) => {
     const supermarketName = entry.Supermarket.name;
+    const supermarketPage = entry.Supermarket.page;
+    const supermarketlogo = entry.Supermarket.logo;
     const productInfo = {
       quantity: ProductId.find(item => entry.Product.id == item.id)?.quantity,
       id: entry.id,
@@ -78,11 +73,10 @@ export const findCartShop = async (req, res) => {
       url: entry.url,
       Product: entry.Product,
     };
-
-    console.log(productInfo)
-
     if (!groupedBySupermarket[supermarketName]) {
       groupedBySupermarket[supermarketName] = {
+        logo: supermarketlogo,
+        page: supermarketPage,
         name: supermarketName,
         products: [productInfo],
       };
@@ -92,8 +86,5 @@ export const findCartShop = async (req, res) => {
   });
 
   const output = Object.values(groupedBySupermarket);
-
-  console.log(output)
-
   res.json(output);
 };

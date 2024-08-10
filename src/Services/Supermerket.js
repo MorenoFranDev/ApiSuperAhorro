@@ -2,28 +2,25 @@ import { Supermarket } from "../models/Supermarket.js";
 
 export const CreateSupermarket = async (logo, name) => {
   try {
-    const newSupermarket = new Supermarket({
-      logo,
-      name,
+    return await Supermarket.findOrCreate({
+      where: { name }, defaults: {
+        logo,
+        name
+      }
     });
-    const result = await newSupermarket.save();
-    return result
   } catch (error) {
     return null
   }
 };
 
-export const updateSupermarketService = async (name, id,logo) => {
-  const result = await Supermarket.update({ name, logo }, { where: { id } })
+export const updateSupermarketService = async (name, id, logo) => {
+  const result = await Supermarket.update({ name , logo }, { where: { id } })
   return result
 }
 
 export const getSupermarketService = async () => {
-  const result = await Supermarket.findAll({ attributes: ["name", "id"] })
-  return {
-    "SupermarketId": result.id,
-    "name": result.name
-  }
+  const result = await Supermarket.findAll({ attributes: ["name", "id", "logo", "page"] })
+  return result
 }
 
 export const findSupermarketByName = async (name) => {

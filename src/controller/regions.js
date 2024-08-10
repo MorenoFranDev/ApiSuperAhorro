@@ -11,21 +11,21 @@ export const createRegion = async (req, res) => {
   }
 };
 
-export const getRegions = async(req, res)=>{
+export const getRegions = async (req, res) => {
   const result = await findRegionByName()
   return res.json(result)
 }
 
 
-export const removeRegion = async(req, res)=>{
-   const {id}=req.params
-   const result = await removeRegionService(id)
-   res.json( result)
+export const removeRegion = async (req, res) => {
+  const { id } = req.params
+  const result = await removeRegionService(id)
+  res.json(result)
 }
 
-export const updateRegion = async (req, res)=>{
-  const {name} = req.body
-  const {id} = req.params
-  const result = await updateRegionService(name,id);
+export const updateRegion = async (req, res) => {
+  const { name } = req.body
+  const { id } = req.params
+  const result = await updateRegionService(name, id);
   res.json(result)
 }

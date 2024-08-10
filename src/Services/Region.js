@@ -2,15 +2,15 @@ import { Region } from "../models/Region.js";
 
 export const createRegionService = async (name) => {
   try {
-    const newRegion = new Region({ name });
-    return await newRegion.save();
+    return await Region.findOrCreate({ where: { name }, defaults: { name } });
   } catch (error) {
     return error;
   }
 };
 
 export const findRegionByName = async (name) => {
-  const result = await Region.findOne({ where: { name } });
+  // const result = (name) ? await Region.findOne({ where: { name } }) : await Region.findAll()
+  const result =  await Region.findAll()
   if (result) return { "RegionId": result.id, "name": result.name };
   return null
 };

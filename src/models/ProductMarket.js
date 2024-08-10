@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connection.js";
-sequelize.sync()
 
 export const ProductMarket = sequelize.define("ProductMarket", {
   id: {

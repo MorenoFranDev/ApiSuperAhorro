@@ -37,10 +37,9 @@ export const createProductMarket = async (req, res) => {
 export const findArticles = async (req, res) => {
   const { name, order, market, category } = req.query;
   const page = (req.query.page === undefined) ? 1 : req.query.page
-  
   var result;
-  
   let whereSupermarket
+  
   if (market) {
     const {SupermarketId} = await findSupermarketByName(market);
     whereSupermarket = SupermarketId
@@ -91,10 +90,11 @@ export const createProductList = async (req, res) => {
 
 
 export const create_cartshop = async(req, res)=>{
-  const id = req.header.Authorization
-  const list = req.body.ElementsCart
+  const UserId = req.body.UserId
+  const ProductId = req.body.ProductId
   try {
-    const cart = await service_create_cartshop(list, id)
+    console.log(UserId,ProductId )
+    const cart = await service_create_cartshop(ProductId, UserId)
     res.json(cart)
   } catch (error) {
     res.json("Error en credenciales o base de datos")

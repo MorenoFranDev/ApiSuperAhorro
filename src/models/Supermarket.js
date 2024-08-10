@@ -4,13 +4,15 @@ import { ProductMarket } from "./ProductMarket.js";
 import { Product } from "./Product.js";
 import { Region } from "./Region.js";
 import { Category } from "./Category.js";
-sequelize.sync()
 
 export const Supermarket = sequelize.define("Supermarket", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+  },
+  page: {
+    type: DataTypes.STRING,
   },
   name: {
     type: DataTypes.STRING,
@@ -23,11 +25,3 @@ export const Supermarket = sequelize.define("Supermarket", {
 },{
   timestamps: true
 });
-
-Supermarket.hasMany(ProductMarket)
-Product.hasMany(ProductMarket)
-Region.hasMany(ProductMarket)
-
-ProductMarket.belongsTo(Supermarket)
-ProductMarket.belongsTo(Product)
-Product.belongsTo(Category)

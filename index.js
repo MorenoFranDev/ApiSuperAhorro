@@ -3,9 +3,11 @@ import app from "./src/app.js"
 
 const main = () => {
   app
-  .listen(process.env.PORT  || 4000);
+    .listen(process.env.PORT || 4000);
   try {
-    sequelize.sync();
+    sequelize.sync({
+      alter: true
+    });
   } catch (error) {
     console.log("Error in db")
   }
