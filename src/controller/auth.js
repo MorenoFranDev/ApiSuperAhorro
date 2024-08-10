@@ -15,9 +15,9 @@ export const local_login = async (req, res) => {
         const userWithEmail = await User.findOne({
             where: { email },
         });
-        if (!userWithEmail) return res.status(500).json("error in credentials");
+        if (!userWithEmail) return res.status(500).json("error in user");
         const verify = await verifyPassword(password, userWithEmail.password);
-        if (!verify) return res.status(500).json("error in credentials")
+        if (!verify) return res.status(500).json("error in passwors")
 
         const token = jwt.sign(
             {
