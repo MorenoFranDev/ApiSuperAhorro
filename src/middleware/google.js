@@ -19,6 +19,7 @@ passport.use("auth-google", new GoogleStrategy({
     profile: profile.photos[0].value,
     range: 2 //Range: 1 -> Admin, 2 -> Users, 3 -> Local
   }
+  console.log(default_user)
   const newuser = await User.findOrCreate({ where: { googleId: profile.id }, defaults: {default_user, password} })
   if (!newuser) {
     cb (err,null)
