@@ -13,6 +13,7 @@ export const createRegion = async (req, res) => {
 
 export const getRegions = async (req, res) => {
   const result = await findRegionByName()
+  console.log("router: ",result)
   return res.json(result)
 }
 
