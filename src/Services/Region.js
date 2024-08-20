@@ -11,6 +11,7 @@ export const createRegionService = async (name) => {
 export const findRegionByName = async (name) => {
   // const result = (name) ? await Region.findOne({ where: { name } }) : await Region.findAll()
   const result =  await Region.findAll()
+  console.log(result)
   if (result) return { "RegionId": result.id, "name": result.name };
   return null
 };
