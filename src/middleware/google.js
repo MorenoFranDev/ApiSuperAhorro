@@ -23,9 +23,6 @@ passport.use("auth-google", new GoogleStrategy({
   if (!newuser) {
     return (null, false, { message: 'Error in google acount' })
   }
-
-  console.log(newuser[0].User)
-
 //   const user = {
 //     "fullName": req.user.fullName,
 //     "range": req.user.range,
@@ -34,7 +31,7 @@ passport.use("auth-google", new GoogleStrategy({
 //     "userId": req.user.id,
 // }
 
-  return cb(null, newuser[0].user);
+  return cb(null, newuser);
 }));
 
 passport.serializeUser((user, cb) => {
