@@ -30,9 +30,9 @@ passport.use("auth-google", new GoogleStrategy({
       }
     })
     const token = jwt.sign(default_user, SecretJWT);
-    done(null, { token })
+    return cb(null, { token })
   } catch (error) {
-    done(error)
+    return cb(error)
   }
 
 }));
