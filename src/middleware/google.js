@@ -3,7 +3,6 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { GOOGLE_CLIENT_ID, GOOGLE_SECRET, PassportCallbackURL, SecretCors, SecretJWT } from '../config.js';
 import { User } from '../models/Users.js';
 import { encryptPass } from './bcrypt.js';
-import jwt from "jsonwebtoken"
 
 passport.use("auth-google", new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
@@ -24,30 +23,9 @@ passport.use("auth-google", new GoogleStrategy({
   if (!newuser) {
     return (null, false, { message: 'Error in google acount' })
   }
-  const {id} = newuser
-  console.log(id, default_user )
+  console.log(id, newuser[0].user.dataValues )
   return cb(null, newuser);
 }));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 passport.serializeUser((user, cb) => {
   cb(null, user)
