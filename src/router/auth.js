@@ -11,7 +11,8 @@ const setheader = (req, res, next)=>{
 }
 
 router.get('/google',setheader, passport.authenticate('auth-google'), loginGoogle)
-router.get('/google/redirect', passport.authenticate('auth-google'));
+router.get('/google/redirect', setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }));
+
 
 router.post('/inicio-sesion', local_login)
 router.post('/register', createUser)
