@@ -5,8 +5,17 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 
 export const loginGoogle = (req, res) => {
-    console.log(req.user)
-    res.json(req.user);
+    const token = jwt.sign(
+        {
+            "fullName": req.user.fullName,
+            "range": req.user.range,
+            "email": req.user.email,
+            "Profle": req.user.profile,
+            "UserId": req.user.id,
+        },
+        SecretJWT
+    );
+    res.redirect(`${SecretCors}/login/success?token=${token}`)
 };
 
 export const local_login = async (req, res) => {
