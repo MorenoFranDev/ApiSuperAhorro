@@ -15,21 +15,23 @@ passport.use("auth-google", new GoogleStrategy({
     googleId: profile.id,
     email: profile.emails[0].value,
     profile: profile.photos[0].value,
-    range: 2 //Range: 1 -> Admin, 2 -> Users, 3 -> Local
-  }
-  const user = await User.findOne({ where: { googleId: profile.id } })
-  console.log("Usurio encontrado: ", default_user)
-  if (user) {
-    const token = jwt.sign({ default_user }, SecretJWT);
-    return res.redirect(`${SecretCors}/login/success?token=${token}`);
+    range: 2
   }
   const password = await encryptPass(profile.id)
-  const newuser = new User({ default_user, password })
-  await newuser.save()
-  if (user) {
-    const token = jwt.sign({ default_user }, SecretJWT);
-    return res.redirect(`${SecretCors}/login/success?token=${token}`);
-  }
+  const user = await User.findOrCreate({
+    where: { googleId: profile.id }, defaults: {
+      fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+      googleId: profile.id,
+      email: profile.emails[0].value,
+      profile: profile.photos[0].value,
+      range: 2,
+      password
+    }
+  })
+  console.log(user)
+
+  const token = jwt.sign(default_user, SecretJWT);
+  return res.redirect(`${SecretCors}/login/success?token=${token}`);
 }));
 
 passport.serializeUser((user, cb) => {
