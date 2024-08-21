@@ -5,8 +5,8 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 
 export const loginGoogle = (req, res) => {
-    console.log(req.newuser)
-    res.json(req.newuser);
+    console.log(req.user)
+    res.json(req.user);
 };
 
 export const local_login = async (req, res) => {
