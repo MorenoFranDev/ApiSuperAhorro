@@ -5,11 +5,6 @@ import("../middleware/google.js")
 passport.initialize()
 const router = Router();
 
-const setheader = (req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  next();
-}
-
 router.get('/google', passport.authenticate('auth-google', { scope: ['profile', 'email'] }))
 router.get('/google/redirect',passport.authenticate('auth-google', { session: false }), loginGoogle);
 
