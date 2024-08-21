@@ -23,7 +23,7 @@ passport.use("auth-google", new GoogleStrategy({
   if (!newuser) {
     return (null, false, { message: 'Error in google acount' })
   }
-  return cb(null, newuser[0].user.dataValues);
+  return cb(null, newuser[0].user);
 }));
 
 passport.serializeUser((user, cb) => {
