@@ -28,10 +28,8 @@ passport.use("auth-google", new GoogleStrategy({
       password
     }
   })
-  console.log(user)
-
   const token = jwt.sign(default_user, SecretJWT);
-  return cb(token)
+  return cb(null, token)
 }));
 
 passport.serializeUser((user, cb) => {
