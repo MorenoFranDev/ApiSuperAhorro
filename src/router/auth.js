@@ -5,12 +5,17 @@ import("../middleware/google.js")
 passport.initialize()
 const router = Router();
 
-router.get('/google', passport.authenticate('auth-google', { scope: ['profile', 'email'] }))
+const setheader = (req, res, next)=>{
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  next();
+}
+
+router.get('/google',setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }))
 router.get('/google/redirect', passport.authenticate('auth-google'), loginGoogle);
 
 router.post('/inicio-sesion', local_login)
 router.post('/register', createUser)
-router.get('/token',GetData)
+router.get('/token', GetData)
 
 export default router;
 
