@@ -11,14 +11,12 @@ const setheader = (req, res, next) => {
 }
 
 router.get('/google', passport.authenticate("auth-google", { scope: ['profile', 'email'] }))
-router.get('/google/callback', passport.authenticate("auth-google"), (req, res) => {
+router.get('/google/callback', passport.authenticate("google", {
+  failureMessage: "Cannot login to Google, please try again later!",
+  failureRedirect:"https://frontend-inky-rho.vercel.app/inicio-sesion",
+  successRedirect: "https://frontend-inky-rho.vercel.app",
+}), (req, res) => {
   console.log("\n\n\n\nLOGIN GOOGLE: ", req, "\n\n\n\n")
-  const { token } = req.authInfo || {};
-  if (token) {
-    res.redirect("https://frontend-inky-rho.vercel.app");
-  } else {
-    res.status(401).json({ message: 'Authentication failed' });
-  };
 })
 
 
