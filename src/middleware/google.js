@@ -24,7 +24,7 @@ passport.use("auth-google", new GoogleStrategy({
   if (!newuser) {
     return (null, false, { message: 'Error in google acount' })
   }
-  done(null, default_user);
+  return done(null, default_user);
 }));
 
 
