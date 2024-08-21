@@ -31,7 +31,7 @@ passport.use("auth-google", new GoogleStrategy({
   console.log(user)
 
   const token = jwt.sign(default_user, SecretJWT);
-  return res.redirect(`${SecretCors}/login/success?token=${token}`);
+  return cb(token)
 }));
 
 passport.serializeUser((user, cb) => {

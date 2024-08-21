@@ -3,6 +3,12 @@ import { SecretJWT } from "../config.js";
 import { User } from "../models/Users.js";
 import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
+export const loginGoogle = (req, res) => {
+    console.log("\n\n\n\nLOGIN GOOGLE: ", req,"\n\n\n\n")
+    res.redirect(`${SecretCORS}/login/success`);
+};
+
+
 export const local_login = async (req, res) => {
     try {
         const { email, password } = req.body;
