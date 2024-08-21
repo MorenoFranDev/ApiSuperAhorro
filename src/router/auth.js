@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, GetData, local_login } from "../controller/auth.js";
+import { createUser, GetData, local_login, loginGoogle } from "../controller/auth.js";
 import passport from "passport";
 import("../middleware/google.js")
 passport.initialize()
@@ -10,13 +10,8 @@ const setheader = (req, res, next) => {
   next();
 }
 
-router.get('/google', passport.authenticate("auth-google"))
-
-router.get('/google/callback', passport.authenticate("auth-google"), (req, res) => {
-  console.log(req)
-  res.send(200)
-})
-
+router.get('/google', passport.authenticate('auth-google', { scope: ['profile', 'email'] }))
+router.get('/google/redirect', passport.authenticate('auth-google'), loginGoogle);
 
 router.post('/inicio-sesion', local_login)
 router.post('/register', createUser)

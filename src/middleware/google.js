@@ -9,34 +9,43 @@ passport.use("auth-google", new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_SECRET,
   callbackURL: PassportCallbackURL,
-  scope: ['email','profile'],
+  scope: ['email', 'profile'],
 }, async (accessToken, refreshToken, profile, cb) => {
-  try {
-    const default_user = {
-      fullName: `${profile.name.givenName} ${profile.name.familyName}`,
-      googleId: profile.id,
-      email: profile.emails[0].value,
-      profile: profile.photos[0].value,
-      range: 2
-    }
-    const password = await encryptPass(profile.id)
-    const user = await User.findOrCreate({
-      where: { googleId: profile.id }, defaults: {
-        fullName: `${profile.name.givenName} ${profile.name.familyName}`,
-        googleId: profile.id,
-        email: profile.emails[0].value,
-        profile: profile.photos[0].value,
-        range: 2,
-        password
-      }
-    })
-    const token = jwt.sign(default_user, SecretJWT);
-    return cb(null, { token })
-  } catch (error) {
-    return cb(error)
+  const password = await encryptPass(profile.id)
+  const default_user = {
+    password,
+    fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+    googleId: profile.id,
+    email: profile.emails[0].value,
+    profile: profile.photos[0].value,
+    range: 2 //Range: 1 -> Admin, 2 -> Users, 3 -> Local
   }
-
+  const newuser = await User.findOrCreate({ where: { googleId: profile.id }, defaults: default_user })
+  if (!newuser) {
+    return (null, false, { message: 'Error in google acount' })
+  }
+  return (null, default_user);
 }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 passport.serializeUser((user, cb) => {
   cb(null, user)
