@@ -24,7 +24,7 @@ passport.use("auth-google", new GoogleStrategy({
     return (null, false, { message: 'Error in google acount' })
   }
 
-  console.log(newuser)
+  console.log(newuser[0].User.dataValues)
 
 //   const user = {
 //     "fullName": req.user.fullName,
