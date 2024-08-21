@@ -10,26 +10,31 @@ passport.use("auth-google", new GoogleStrategy({
   clientSecret: GOOGLE_SECRET,
   callbackURL: PassportCallbackURL,
 }, async (accessToken, refreshToken, profile, cb) => {
-  const default_user = {
-    fullName: `${profile.name.givenName} ${profile.name.familyName}`,
-    googleId: profile.id,
-    email: profile.emails[0].value,
-    profile: profile.photos[0].value,
-    range: 2
-  }
-  const password = await encryptPass(profile.id)
-  const user = await User.findOrCreate({
-    where: { googleId: profile.id }, defaults: {
+  try {
+    const default_user = {
       fullName: `${profile.name.givenName} ${profile.name.familyName}`,
       googleId: profile.id,
       email: profile.emails[0].value,
       profile: profile.photos[0].value,
-      range: 2,
-      password
+      range: 2
     }
-  })
-  const token = jwt.sign(default_user, SecretJWT);
-  return cb(null, token)
+    const password = await encryptPass(profile.id)
+    const user = await User.findOrCreate({
+      where: { googleId: profile.id }, defaults: {
+        fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        profile: profile.photos[0].value,
+        range: 2,
+        password
+      }
+    })
+    const token = jwt.sign(default_user, SecretJWT);
+    done(null, { token })
+  } catch (error) {
+    done(error)
+  }
+
 }));
 
 passport.serializeUser((user, cb) => {

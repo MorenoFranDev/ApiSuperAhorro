@@ -13,8 +13,13 @@ const setheader = (req, res, next)=>{
 router.get('/google',setheader, passport.authenticate('auth-google'))
 router.get('/google/redirect', setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }),(req, res) => {
   console.log("\n\n\n\nLOGIN GOOGLE: ", req,"\n\n\n\n")
-  res.json(`${SecretCORS}/login/success`);
-};);
+  const { token } = req.authInfo || {};
+  if (token) {
+    res.json({ token });
+  } else {
+    res.status(401).json({ message: 'Authentication failed' });
+  }
+});
 
 
 router.post('/inicio-sesion', local_login)
