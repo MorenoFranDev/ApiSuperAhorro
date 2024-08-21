@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, GetData, local_login, loginGoogle } from "../controller/auth.js";
+import { createUser, GetData, local_login } from "../controller/auth.js";
 import passport from "passport";
 import("../middleware/google.js")
 passport.initialize()
