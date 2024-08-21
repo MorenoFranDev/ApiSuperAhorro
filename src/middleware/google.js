@@ -19,7 +19,7 @@ passport.use("auth-google", new GoogleStrategy({
   }
   const user = await User.findOne({ where: { googleId: profile.id } })
   console.log("Usurio encontrado: ",default_user)
-  if (user) return cb(null, default_user)
+  if (user) return (default_user)
     const password = await encryptPass(profile.id)
   const newuser = new User ({ default_user, password })
   await newuser.save()
