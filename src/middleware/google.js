@@ -3,7 +3,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { GOOGLE_CLIENT_ID, GOOGLE_SECRET, PassportCallbackURL, SecretCors, SecretJWT } from '../config.js';
 import { User } from '../models/Users.js';
 import { encryptPass } from './bcrypt.js';
-import { CartShop } from '../models/CartShop.js';
+import jwt from "jsonwebtoken"
 
 passport.use("auth-google", new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
