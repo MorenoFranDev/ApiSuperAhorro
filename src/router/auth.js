@@ -10,13 +10,11 @@ const setheader = (req, res, next) => {
   next();
 }
 
-router.get('/google', passport.authenticate("auth-google", { scope: ['profile', 'email'] }))
-router.get('/google/callback', passport.authenticate("google", {
-  failureMessage: "Cannot login to Google, please try again later!",
-  failureRedirect:"https://frontend-inky-rho.vercel.app/inicio-sesion",
-  successRedirect: "https://frontend-inky-rho.vercel.app",
-}), (req, res) => {
-  console.log("\n\n\n\nLOGIN GOOGLE: ", req, "\n\n\n\n")
+router.get('/google', passport.authenticate("auth-google"))
+
+router.get('/google/callback', passport.authenticate("auth-google"), (req, res) => {
+  console.log(req)
+  res.send(200)
 })
 
 

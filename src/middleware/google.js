@@ -9,6 +9,7 @@ passport.use("auth-google", new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_SECRET,
   callbackURL: PassportCallbackURL,
+  scope: ['email','profile'],
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
     const default_user = {

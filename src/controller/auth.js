@@ -25,7 +25,7 @@ export const local_login = async (req, res) => {
             SecretJWT
         );
         console.log({ token: token });
-        return res.json({"token":token})
+        return done(null, { token });
     } catch (error) {
         return res.json("Error in credentials")
     }
@@ -49,7 +49,7 @@ export const createUser = async (req, res) => {
             { email: email, range: 2, fullName: fullName },
             SecretJWT
         );
-        console.log( "\n\n\n\ntoken: ", token );
+        console.log("\n\n\n\ntoken: ", token);
         res.json({ token: token });
     } catch (error) {
         res.status(500).json({ msg: "error in data" });
