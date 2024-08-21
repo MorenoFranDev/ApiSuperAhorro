@@ -39,9 +39,9 @@ export const findArticles = async (req, res) => {
   const page = (req.query.page === undefined) ? 1 : req.query.page
   var result;
   let whereSupermarket
-  
+
   if (market) {
-    const {SupermarketId} = await findSupermarketByName(market);
+    const { SupermarketId } = await findSupermarketByName(market);
     whereSupermarket = SupermarketId
   }
 
@@ -89,14 +89,13 @@ export const createProductList = async (req, res) => {
 }
 
 
-export const create_cartshop = async(req, res)=>{
-      const Authorization = req.headers['authorization'].split(" ")[1];
-              const token = jwt.verify(Authorization, SecretJWT);
-
-  const UserId = token.
+export const create_cartshop = async (req, res) => {
+  const Authorization = req.headers['authorization'].split(" ")[1];
+  const token = jwt.verify(Authorization, SecretJWT);
+  const UserId = token.UserId
   const ProductId = req.body.ProductId
   try {
-    console.log(UserId,ProductId )
+    console.log(UserId, ProductId)
     const cart = await service_create_cartshop(ProductId, UserId)
     res.json(cart)
   } catch (error) {
