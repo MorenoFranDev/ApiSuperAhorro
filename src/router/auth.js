@@ -5,21 +5,21 @@ import("../middleware/google.js")
 passport.initialize()
 const router = Router();
 
-const setheader = (req, res, next)=>{
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+const setheader = (req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   next();
 }
 
-router.get('/google',setheader, passport.authenticate('auth-google'))
-router.get('/google/redirect', setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }),(req, res) => {
-  console.log("\n\n\n\nLOGIN GOOGLE: ", req,"\n\n\n\n")
+router.get('/google', passport.authenticate("auth-google", { scope: ['profile', 'email'] }))
+router.get('/google/callback', passport.authenticate("auth-google"), (req, res) => {
+  console.log("\n\n\n\nLOGIN GOOGLE: ", req, "\n\n\n\n")
   const { token } = req.authInfo || {};
   if (token) {
     res.json({ token });
   } else {
     res.status(401).json({ message: 'Authentication failed' });
-  }
-});
+  };
+})
 
 
 router.post('/inicio-sesion', local_login)
