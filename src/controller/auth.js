@@ -5,12 +5,13 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 
 export const loginGoogle = (req, res) => {
+    console.log(req.user)
     const user = {
         "fullName": req.user.fullName,
         "range": req.user.range,
         "email": req.user.email,
-        "Profle": req.user.profile,
-        "UserId": req.user.id,
+        "profle": req.user.profile,
+        "userId": req.user.id,
     }
 
     const token = jwt.sign(user,SecretJWT);
