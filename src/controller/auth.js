@@ -5,8 +5,8 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 
 export const loginGoogle = (req, res) => {
-    console.log(req)
-    res.json(`${SecretCors}/login/success?token=1`);
+    console.log(req.default_user)
+    res.json(req.default_user);
 };
 
 export const local_login = async (req, res) => {
