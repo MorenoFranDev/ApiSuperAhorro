@@ -15,7 +15,7 @@ router.get('/google/callback', passport.authenticate("auth-google"), (req, res) 
   console.log("\n\n\n\nLOGIN GOOGLE: ", req, "\n\n\n\n")
   const { token } = req.authInfo || {};
   if (token) {
-    res.json({ token });
+    res.redirect("https://frontend-inky-rho.vercel.app");
   } else {
     res.status(401).json({ message: 'Authentication failed' });
   };
