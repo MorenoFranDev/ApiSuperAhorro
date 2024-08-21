@@ -6,14 +6,7 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 export const loginGoogle = (req, res) => {
     console.log(req.user)
-    const user = {
-        "fullName": req.user.fullName,
-        "range": req.user.range,
-        "email": req.user.email,
-        "profle": req.user.profile,
-        "userId": req.user.id,
-    }
-
+    const user = req.user
     const token = jwt.sign(user,SecretJWT);
     console.log(token)
     res.redirect(`${SecretCors}/login/success?token=${token}`)
