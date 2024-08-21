@@ -10,8 +10,8 @@ const setheader = (req, res, next)=>{
   next();
 }
 
-router.get('/google',setheader, passport.authenticate('auth-google'), loginGoogle)
-router.get('/google/redirect', setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }));
+router.get('/google',setheader, passport.authenticate('auth-google'))
+router.get('/google/redirect', setheader, passport.authenticate('auth-google', { scope: ['profile', 'email'] }),loginGoogle);
 
 
 router.post('/inicio-sesion', local_login)
