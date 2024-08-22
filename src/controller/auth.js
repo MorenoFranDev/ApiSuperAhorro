@@ -5,10 +5,7 @@ import { encryptPass, verifyPassword } from "../middleware/bcrypt.js";
 
 
 export const loginGoogle = (req, res) => {
-    console.log(req.user[0].User)
-    const user = req.user
-    const token = jwt.sign(user,SecretJWT);
-    console.log(token)
+    const token = jwt.sign(req.user,SecretJWT) 
     res.redirect(`${SecretCors}/login/success?token=${token}`)
 };
 
@@ -32,7 +29,6 @@ export const local_login = async (req, res) => {
             },
             SecretJWT
         );
-        console.log({ token: token });
         return done(null, { token });
     } catch (error) {
         return res.json("Error in credentials")
@@ -57,7 +53,6 @@ export const createUser = async (req, res) => {
             { email: email, range: 2, fullName: fullName },
             SecretJWT
         );
-        console.log("\n\n\n\ntoken: ", token);
         res.json({ token: token });
     } catch (error) {
         res.status(500).json({ msg: "error in data" });
@@ -68,8 +63,7 @@ export const GetData = (req, res) => {
     try {
         const Authorization = req.headers["authorization"].split(" ")[1];
         const token = jwt.verify(Authorization, SecretJWT);
-        console.log(token)
-        res.json({ user: token });
+        res.json(token);
     } catch (error) {
         res.json({ msg: "error in token" });
     }

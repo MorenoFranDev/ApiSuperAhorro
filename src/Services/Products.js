@@ -134,3 +134,7 @@ export const service_create_cartshop = async (list, UserId)=>{
   const cart = new CartShop(newlist) 
   return await cart.save()
 }
+
+export const service_user_cartshop = async(UserId)=>{
+  return await CartShop.findOne({where: {UserId}})
+} 

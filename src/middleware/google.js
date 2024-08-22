@@ -30,8 +30,7 @@ passport.use("auth-google", new GoogleStrategy({
 //     "profle": req.user.profile,
 //     "userId": req.user.id,
 // }
-
-  return cb(null, newuser);
+  return cb(null, newuser[0].dataValues);
 }));
 
 passport.serializeUser((user, cb) => {

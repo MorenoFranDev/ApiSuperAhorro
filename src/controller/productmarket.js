@@ -1,5 +1,5 @@
 import { getFind } from "../Services/Category.js";
-import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name, service_create_cartshop } from "../Services/Products.js";
+import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name, service_create_cartshop, service_user_cartshop } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
 import { findSupermarketByName } from "../Services/Supermerket.js";
 
@@ -102,3 +102,12 @@ export const create_cartshop = async (req, res) => {
     res.json("Error en credenciales o base de datos")
   }
 } 
+
+
+export const get_cartshop =async (req,res)=>{
+  const Authorization = req.headers['authorization'].split(" ")[1];
+  const token = jwt.verify(Authorization, SecretJWT);
+  const UserId = token.id
+  const cart = await service_user_cartshop(UserId)
+  res.json(cart)
+}
