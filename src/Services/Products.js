@@ -129,7 +129,7 @@ export const find_custom_ProductSupermarket = async (ProductId, SupermarketId) =
 export const service_create_cartshop = async (list, UserId)=>{
   const newlist = {
     UserId,
-    ElementsCart: list.join(", ")
+    ElementsCart: list
   }
   const cart = new CartShop(newlist) 
   return await cart.save()

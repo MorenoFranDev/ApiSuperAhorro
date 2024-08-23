@@ -8,6 +8,6 @@ router.get("/find", findArticles)
 router.post("/add-json", JWT_Decode_admin, createProductList)
 router.post("/cartshop", findCartShop)
 router.post("/create-cartshop",JWT_Decode_user, create_cartshop)
-router.post("/user-cartshop",JWT_Decode_user, get_cartshop)
+router.get("/user-cartshop",JWT_Decode_user, get_cartshop)
 export default router;
 

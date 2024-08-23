@@ -1,7 +1,9 @@
+import { SecretJWT } from "../config.js";
 import { getFind } from "../Services/Category.js";
-import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name, service_create_cartshop, service_user_cartshop } from "../Services/Products.js";
+import { Actualize_ProductSupermaket, Create_ProductSupermarket, createProduct, find_custom_ProductSupermarket, find_ProdMarket_ByName, find_ProductSupermarket_category, find_ProductSupermarket_name, service_create_cartshop, service_user_cartshop } from "../Services/Products.js";
 import { findRegionByName } from "../Services/Region.js";
 import { findSupermarketByName } from "../Services/Supermerket.js";
+import jwt from "jsonwebtoken"
 
 
 export const createProductMarket = async (req, res) => {
@@ -90,24 +92,60 @@ export const createProductList = async (req, res) => {
 
 
 export const create_cartshop = async (req, res) => {
-  const Authorization = req.headers['authorization'].split(" ")[1];
-  const token = jwt.verify(Authorization, SecretJWT);
-  const UserId = token.UserId
-  const ProductId = req.body.ProductId
   try {
-    console.log(UserId, ProductId)
-    const cart = await service_create_cartshop(ProductId, UserId)
+    const Authorization = req.body.Authorization.split(" ")[1];
+    const token = jwt.verify(Authorization, SecretJWT);
+    const UserId = token.id
+    const ProductId = req.body.ProductId.map((element) => ({
+      id: element.id,
+      quantity: element.quantity
+    })
+    )
+    const cart = await service_create_cartshop(JSON.stringify(ProductId), UserId)
     res.json(cart)
   } catch (error) {
     res.json("Error en credenciales o base de datos")
   }
-} 
+}
 
 
-export const get_cartshop =async (req,res)=>{
-  const Authorization = req.headers['authorization'].split(" ")[1];
-  const token = jwt.verify(Authorization, SecretJWT);
-  const UserId = token.id
-  const cart = await service_user_cartshop(UserId)
-  res.json(cart)
+export const get_cartshop = async (req, res) => {
+  try {
+    const Authorization = req.headers["authorization"].split(" ")[1];
+    const token = jwt.verify(Authorization, SecretJWT);
+    const UserId = token.id
+    const { ElementsCart } = await service_user_cartshop(UserId)
+    const substrings = JSON.parse(ElementsCart);
+    const arrayProductsId = substrings.map((element) => element.id)
+    const result = await find_custom_ProductSupermarket(arrayProductsId);
+    const groupedBySupermarket = {};
+    result.forEach((entry) => {
+      const supermarketName = entry.Supermarket.name;
+      const supermarketPage = entry.Supermarket.page;
+      const supermarketlogo = entry.Supermarket.logo;
+      const productInfo = {
+        quantity: substrings.find(item => entry.Product.id == item.id)?.quantity,
+        id: entry.id,
+        price: entry.price,
+        offer: entry.offer,
+        no_offer: entry.no_offer,
+        url: entry.url,
+        Product: entry.Product,
+      };
+      if (!groupedBySupermarket[supermarketName]) {
+        groupedBySupermarket[supermarketName] = {
+          logo: supermarketlogo,
+          page: supermarketPage,
+          name: supermarketName,
+          products: [productInfo],
+        };
+      } else {
+        groupedBySupermarket[supermarketName].products.push(productInfo);
+      }
+    });
+    const output = Object.values(groupedBySupermarket);
+    res.status(200).json(output);
+  } catch (error) {
+    res.status(500).json("Error en database or credentials")
+  }
 }
