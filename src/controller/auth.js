@@ -15,6 +15,7 @@ export const local_login = async (req, res) => {
         const userWithEmail = await User.findOne({
             where: { email },
         });
+        console.log(userWithEmail)
         if (!userWithEmail) return res.status(500).json("error in user");
         const verify = await verifyPassword(password, userWithEmail.password);
         if (!verify) return res.status(500).json("error in passwors")
@@ -29,9 +30,9 @@ export const local_login = async (req, res) => {
             },
             SecretJWT
         );
-        return done(null, { token });
+        return res.json({"token": token});
     } catch (error) {
-        return res.json("Error in credentials")
+        return res.status(500).json("Error in credentials")
     }
 };
 export const createUser = async (req, res) => {
@@ -46,16 +47,19 @@ export const createUser = async (req, res) => {
             profile: null,
         };
         const resp = await User.findOne({ where: { email } });
-        if (resp) return res.json({ msg: "Datos incorrectos o usuario existente" });
+        if (resp) return res.status(500).json({ msg: "Datos incorrectos o usuario existente" });
         const createUser = new User(user);
-        await createUser.save();
+        const result = await createUser.save();
+        const UserId = result.id
+        console.log(UserId)
         const token = jwt.sign(
-            { email: email, range: 2, fullName: fullName },
+            { email: email, range: 2, fullName: fullName,UserId: UserId },
             SecretJWT
         );
         res.json({ token: token });
     } catch (error) {
-        res.status(500).json({ msg: "error in data" });
+        console.log(error)
+        res.status(500).send({ msg: "error in data" });
     }
 };
 

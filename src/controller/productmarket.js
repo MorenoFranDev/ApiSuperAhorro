@@ -95,16 +95,18 @@ export const create_cartshop = async (req, res) => {
   try {
     const Authorization = req.body.Authorization.split(" ")[1];
     const token = jwt.verify(Authorization, SecretJWT);
-    const UserId = token.id
+    const UserId = token.UserId
     const ProductId = req.body.ProductId.map((element) => ({
       id: element.id,
       quantity: element.quantity
     })
     )
+    if(!UserId) return res.status(500).send("Error in UserId") 
+    
     const cart = await service_create_cartshop(JSON.stringify(ProductId), UserId)
     res.json(cart)
   } catch (error) {
-    res.json("Error en credenciales o base de datos")
+    res.status(500).json("Error en credenciales o base de datos")
   }
 }
 
@@ -113,7 +115,7 @@ export const get_cartshop = async (req, res) => {
   try {
     const Authorization = req.headers["authorization"].split(" ")[1];
     const token = jwt.verify(Authorization, SecretJWT);
-    const UserId = token.id
+    const UserId = token.UserId
     const { ElementsCart } = await service_user_cartshop(UserId)
     const substrings = JSON.parse(ElementsCart);
     const arrayProductsId = substrings.map((element) => element.id)
@@ -143,9 +145,11 @@ export const get_cartshop = async (req, res) => {
         groupedBySupermarket[supermarketName].products.push(productInfo);
       }
     });
+    console.log(groupedBySupermarket)
     const output = Object.values(groupedBySupermarket);
     res.status(200).json(output);
   } catch (error) {
+    console.log(error)
     res.status(500).json("Error en database or credentials")
   }
 }
