@@ -95,8 +95,7 @@ export const create_cartshop = async (req, res) => {
   try {
     const Authorization = req.body.Authorization.split(" ")[1];
     const token = jwt.verify(Authorization, SecretJWT);
-    const UserId = token.UserId
-    console.log(token)
+    const UserId = token.id
     const ProductId = req.body.ProductId.map((element) => ({
       id: element.id,
       quantity: element.quantity
