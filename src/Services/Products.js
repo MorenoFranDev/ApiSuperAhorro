@@ -131,6 +131,7 @@ export const service_create_cartshop = async (list, UserId)=>{
     UserId,
     ElementsCart: list
   }
+  console.log("Service_create_cartshop:  ",newlist)
   const cart = new CartShop(newlist) 
   return await cart.save()
 }
